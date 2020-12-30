@@ -1,6 +1,7 @@
 window.onload = function() {
     var authCode = localStorage.getItem('authCode');
     var redirectUri = localStorage.getItem('redirectUri');
+    var codeVerifier = localStorage.getItem('codeVerifier');
     if (authCode) {
         var authRequest = new XMLHttpRequest();
         var tokenUrl = 'http://localhost:9000/auth/realms/heroes/protocol/openid-connect/token';
@@ -22,7 +23,7 @@ window.onload = function() {
                 document.getElementById('access_token').innerText = tokenBody.error;
             }
         };
-        var tokenParams = 'grant_type=authorization_code&client_id=spa-heroes&redirect_uri=' + redirectUri + '&code=' + authCode;
+        var tokenParams = 'grant_type=authorization_code&client_id=spa-heroes&redirect_uri=' + redirectUri + '&code=' + authCode + '&code_verifier=' + codeVerifier;
         authRequest.send(tokenParams);
     }
 }

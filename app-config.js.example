@@ -16,3 +16,8 @@ var urlConfig = {
     token_url: 'http://localhost:9000/auth/realms/heroes/protocol/openid-connect/token',
     heroes_url: 'http://localhost:10001/api/heroes',
 };
+
+var refreshConfig = {
+    client_id: 'spa-heroes',
+    grant_type: 'refresh_token'
+}

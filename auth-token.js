@@ -1,11 +1,8 @@
 window.onload = function() {
     var authCode = localStorage.getItem('authCode');
-    var redirectUri = localStorage.getItem('redirectUri');
-    var codeVerifier = localStorage.getItem('codeVerifier');
     if (authCode) {
         var authRequest = new XMLHttpRequest();
-        var tokenUrl = 'http://localhost:9000/auth/realms/heroes/protocol/openid-connect/token';
-        authRequest.open('POST', tokenUrl, true);
+        authRequest.open('POST', urlConfig.token_url, true);
         authRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8;');
         authRequest.onload = function() {
             var tokenBody = {};
@@ -23,7 +20,9 @@ window.onload = function() {
                 document.getElementById('access_token').innerText = tokenBody.error;
             }
         };
-        var tokenParams = 'grant_type=authorization_code&client_id=spa-heroes&redirect_uri=' + redirectUri + '&code=' + authCode + '&code_verifier=' + codeVerifier;
+        authTokenConfig.code = authCode;
+        tokenParams = createParams(authTokenConfig, false);
+        console.log(tokenParams);
         authRequest.send(tokenParams);
     }
 }
@@ -33,8 +32,7 @@ var getHeroes = function() {
     var refreshToken = localStorage.getItem('refreshToken');
     if (accessToken) {
         var heroRequest = new XMLHttpRequest();
-        var heroUrl = 'http://localhost:10001/api/heroes';
-        heroRequest.open('GET', heroUrl, true);
+        heroRequest.open('GET', urlConfig.heroes_url, true);
         heroRequest.setRequestHeader('Content-Type', 'application/json');
         heroRequest.setRequestHeader('authorization', 'Bearer ' + accessToken);
         heroRequest.onload = function() {

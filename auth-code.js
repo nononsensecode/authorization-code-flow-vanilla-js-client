@@ -38,20 +38,14 @@ async function pkceChallengeFromVerifier(v) {
 
 var getAuthorizationCode = async function() {
     var state = randomString(20);
-    var codeVerifier = generateRandomString();
+    var codeVerifier = randomString(100);
     localStorage.setItem('codeVerifier', codeVerifier);
     var codeChallenge = await pkceChallengeFromVerifier(codeVerifier);
-    alert('Encoded-->' + encodeURIComponent(codeChallenge));
-    var authParams = 'response_type=code'
-        + '&client_id=' + 'spa-heroes'
-        + '&state=' + encodeURIComponent(state)
-        + '&scope='  + 'openid heroes'
-        + '&redirect_uri=' + encodeURIComponent('https://localhost')
-        + '&code_challenge=' + encodeURIComponent(codeChallenge)
-        + '&code_challenge_method=S256';
-    var authUrl = 'http://localhost:9000/auth/realms/heroes/protocol/openid-connect/auth' + '?' + authParams;
-    alert(authUrl);
-    window.location = authUrl;
+    authCodeConfig.state = state;
+    authCodeConfig.code_challenge = codeChallenge;
+    authCodeConfig.code_challenge_method = 'S256';
+    var authParams = createParams(authCodeConfig, true);
+    window.location = urlConfig.auth_url + authParams;
 };
 
 window.onload = function() {
@@ -59,7 +53,6 @@ window.onload = function() {
     var authCode = urlWithAuthCode.searchParams.get('code');
     if (authCode) {
         localStorage.setItem('authCode', authCode);
-        localStorage.setItem('redirectUri', 'https://localhost');
         window.location = 'access-token.html';
     }
 }

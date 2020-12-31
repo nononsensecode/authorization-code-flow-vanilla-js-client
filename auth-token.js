@@ -21,8 +21,8 @@ window.onload = function() {
             }
         };
         authTokenConfig.code = authCode;
+        authTokenConfig.code_verifier = localStorage.getItem('codeVerifier');
         tokenParams = createParams(authTokenConfig, false);
-        console.log(tokenParams);
         authRequest.send(tokenParams);
     }
 }

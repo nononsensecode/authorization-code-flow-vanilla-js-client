@@ -1,0 +1,10 @@
+var appConfig = {
+    client_id: 'spa-heroes',
+    redirect_uri: 'https://localhost',
+    scope: 'openid heroes',
+    response_type: 'code',
+    auth_url: 'http://localhost:9000/auth/realms/heroes/protocol/openid-connect/auth',
+    token_url: 'http://localhost:9000/auth/realms/heroes/protocol/openid-connect/token',
+    grant_type: 'authorization_code',
+    heroes_url: 'http://localhost:10001/api/heroes',
+}

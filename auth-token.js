@@ -22,28 +22,55 @@ window.onload = function() {
         };
         authTokenConfig.code = authCode;
         tokenParams = createParams(authTokenConfig, false);
-        console.log(tokenParams);
         authRequest.send(tokenParams);
     }
 }
 
 var getHeroes = function() {
     var accessToken = localStorage.getItem('accessToken');
-    var refreshToken = localStorage.getItem('refreshToken');
     if (accessToken) {
         var heroRequest = new XMLHttpRequest();
         heroRequest.open('GET', urlConfig.heroes_url, true);
         heroRequest.setRequestHeader('Content-Type', 'application/json');
         heroRequest.setRequestHeader('authorization', 'Bearer ' + accessToken);
         heroRequest.onload = function() {
-            var heroes = '';
-            try {
-                heroes = JSON.stringify(heroRequest.response);
-            } catch(e) {
-                console.error(e);
+            if (heroRequest.status == 200) {
+                listHeroes(heroRequest.response);
+            } else if (heroRequest.status == 401) {
+                refreshAccessToken();
+                getHeroes();
+            } else {
+                document.getElementById('heroes') = 'error';
             }
-            document.getElementById('heroes').innerText = heroes;            
         }
         heroRequest.send();
     }
+};
+
+var listHeroes = function(response) {
+    try {
+        heroes = JSON.stringify(response);
+    } catch(e) {
+        console.error(e);
+    }
+    document.getElementById('heroes').innerText = heroes;
+};
+
+var refreshAccessToken = function() {
+    var refreshToken = localStorage.getItem('refreshToken');
+    var refreshRquest = new XMLHttpRequest();
+    refreshRquest.open('POST', urlConfig.token_url, true);
+    refreshRquest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8;');
+    refreshRquest.onload = function() {
+        var accessTokenBody = {};
+        try {
+            accessTokenBody = JSON.parse(refreshRquest.response);
+            localStorage.setItem('accessToken', accessTokenBody.access_token);
+        } catch(e) {
+            console.error(e);
+        }
+    }
+    refreshConfig.refresh_token = refreshToken;
+    var refreshParams = createParams(refreshConfig, false);
+    refreshRquest.send(refreshParams);
 };

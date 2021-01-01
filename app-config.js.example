@@ -1,13 +1,16 @@
+var clientId = 'heroes-client';
+var redirectUri = 'https://localhost';
+
 var authCodeConfig = {
-    client_id: 'spa-heroes',
-    redirect_uri: 'https://localhost',
+    client_id: clientId,
+    redirect_uri: redirectUri,
     scope: 'openid heroes',
     response_type: 'code'
 };
 
 var authTokenConfig = {
-    client_id: 'spa-heroes',
-    redirect_uri: 'https://localhost',
+    client_id: clientId,
+    redirect_uri: redirectUri,
     grant_type: 'authorization_code',
 };
 
@@ -18,6 +21,6 @@ var urlConfig = {
 };
 
 var refreshConfig = {
-    client_id: 'spa-heroes',
+    client_id: clientId,
     grant_type: 'refresh_token'
 }
